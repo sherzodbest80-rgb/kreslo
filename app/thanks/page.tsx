@@ -134,7 +134,7 @@ export default function ThanksPage() {
             href="/"
             className="inline-flex items-center gap-3 rounded-full bg-damber-blue hover:bg-damber-blue-dark px-8 py-4 font-bold text-white shadow-lg hover:scale-105 transition-all"
           >
-            ← Bosh sahifaga qaytish
+            Bosh sahifaga qaytish
           </a>
         </div>
       </div>
