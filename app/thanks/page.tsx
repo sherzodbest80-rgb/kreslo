@@ -11,7 +11,7 @@ export default function ThanksPage() {
     const fbq = (window as any).fbq;
     if (typeof fbq === "function" && eventId) {
       fbq("track", "Lead", { currency: "UZS", value: 0 }, { eventID: eventId });
-      console.log("[Pixel] Lead event yuborildi, eventID:", eventId);
+      console.log("Pixel Lead yuborildi:", eventId);
       window.localStorage.removeItem("fb_lead_event_id");
     }
   }, []);
@@ -26,22 +26,17 @@ export default function ThanksPage() {
   }, [seconds]);
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-lg p-10 text-center">
-        <div className="mx-auto mb-6 w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
-          <span className="text-5xl">✓</span>
-        </div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-3">Rahmat!</h1>
-        <p className="text-gray-600 mb-6">
+    <main style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px", backgroundColor: "#f9fafb" }}>
+      <div style={{ maxWidth: "400px", width: "100%", backgroundColor: "white", borderRadius: "16px", boxShadow: "0 10px 25px rgba(0,0,0,0.1)", padding: "40px", textAlign: "center" }}>
+        <div style={{ fontSize: "60px", marginBottom: "20px" }}>✓</div>
+        <h1 style={{ fontSize: "28px", fontWeight: "bold", marginBottom: "12px", color: "#111" }}>Rahmat!</h1>
+        <p style={{ color: "#666", marginBottom: "20px" }}>
           Arizangiz muvaffaqiyatli qabul qilindi. Operatorlarimiz tez orada siz bilan bog&apos;lanishadi.
         </p>
-        <p className="text-sm text-gray-500 mb-6">
+        <p style={{ fontSize: "14px", color: "#999", marginBottom: "20px" }}>
           Bosh sahifaga qaytmoqdasiz... {seconds}
         </p>
-        
-          href="/"
-          className="inline-block bg-blue-600 text-white px-6 py-3 rounded-full font-bold hover:bg-blue-700"
-        >
+        <a href="/" style={{ display: "inline-block", backgroundColor: "#1A8FFF", color: "white", padding: "12px 24px", borderRadius: "999px", fontWeight: "bold", textDecoration: "none" }}>
           Bosh sahifaga qaytish
         </a>
       </div>
