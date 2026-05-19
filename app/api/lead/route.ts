@@ -456,30 +456,5 @@ async function createAmoCRMLead(data: {
 
   console.log("[AMOCRM] Неразобранное'ga lid tushdi! ID:", leadId);
 
-  if (leadId && data.comment) {
-    try {
-      const noteText = [
-        `Mijoz: ${data.name}`,
-        `Telefon: ${data.phone}`,
-        data.comment ? `\n${data.comment}` : "",
-      ]
-        .filter(Boolean)
-        .join("\n");
-
-      await fetch(`${baseUrl}/api/v4/leads/${leadId}/notes`, {
-        method: "POST",
-        headers,
-        body: JSON.stringify([
-          {
-            note_type: "common",
-            params: { text: noteText },
-          },
-        ]),
-      });
-    } catch (err) {
-      console.warn("[AMOCRM] Izoh qo'shishda xatolik:", err);
-    }
-  }
-
   return { leadId, contactId };
 }
