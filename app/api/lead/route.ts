@@ -88,6 +88,9 @@ export async function POST(req: NextRequest) {
         fbc,
         clientIp,
         userAgent: userAgent || "",
+        platforma,
+        davlat,
+        bog_lanish_vaqti,
       });
     } catch (amoErr: any) {
       console.error("[AMOCRM XATO]", amoErr.message);
@@ -315,6 +318,9 @@ async function createAmoCRMLead(data: {
   fbc?: string;
   clientIp?: string;
   userAgent?: string;
+  platforma?: string;
+  davlat?: string;
+  bog_lanish_vaqti?: string;
 }) {
   const DOMAIN = process.env.AMOCRM_DOMAIN;
   const ACCESS_TOKEN = process.env.AMOCRM_ACCESS_TOKEN;
@@ -322,6 +328,9 @@ async function createAmoCRMLead(data: {
   const FIELD_FBC = process.env.AMOCRM_FIELD_FBC;
   const FIELD_IP = process.env.AMOCRM_FIELD_IP;
   const FIELD_USER_AGENT = process.env.AMOCRM_FIELD_USER_AGENT;
+  const FIELD_PLATFORMA = process.env.AMOCRM_FIELD_PLATFORMA;
+  const FIELD_DAVLAT = process.env.AMOCRM_FIELD_DAVLAT;
+  const FIELD_BOG_LANISH_VAQTI = process.env.AMOCRM_FIELD_BOG_LANISH_VAQTI;
   const PIPELINE_ID = process.env.AMOCRM_PIPELINE_ID
     ? parseInt(process.env.AMOCRM_PIPELINE_ID)
     : null;
@@ -343,6 +352,28 @@ async function createAmoCRMLead(data: {
       values: [{ value: data.phone, enum_code: "WORK" }],
     },
   ];
+
+  // Damber custom kontakt maydonlari
+  if (FIELD_PLATFORMA && data.platforma) {
+    contactCustomFields.push({
+      field_id: parseInt(FIELD_PLATFORMA),
+      values: [{ value: data.platforma }],
+    });
+  }
+
+  if (FIELD_DAVLAT && data.davlat) {
+    contactCustomFields.push({
+      field_id: parseInt(FIELD_DAVLAT),
+      values: [{ value: data.davlat }],
+    });
+  }
+
+  if (FIELD_BOG_LANISH_VAQTI && data.bog_lanish_vaqti) {
+    contactCustomFields.push({
+      field_id: parseInt(FIELD_BOG_LANISH_VAQTI),
+      values: [{ value: data.bog_lanish_vaqti }],
+    });
+  }
 
   const leadCustomFields: any[] = [];
 
