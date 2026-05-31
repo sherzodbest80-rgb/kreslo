@@ -278,7 +278,7 @@ async function sendToMetaCAPI(data: {
         user_data: userData,
         custom_data: {
           currency: "UZS",
-          value: 0,
+          value: 800000,
         },
       },
     ],
