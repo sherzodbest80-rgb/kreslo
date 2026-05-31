@@ -1,7 +1,33 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
+
+// YORDAMCHI FUNKSIYA: Cookie'lardan fbp va fbc ni o'qish
+function getFbCookies(): { fbp: string; fbc: string } {
+  if (typeof document === "undefined") return { fbp: "", fbc: "" };
+
+  const cookies = document.cookie.split("; ").reduce((acc, cookie) => {
+    const [key, value] = cookie.split("=");
+    if (key && value) acc[key] = value;
+    return acc;
+  }, {} as Record<string, string>);
+
+  const fbp = cookies._fbp || "";
+
+  // FBC: avval URL'dan fbclid ni qaraymiz, keyin cookie
+  let fbc = "";
+  const urlParams = new URLSearchParams(window.location.search);
+  const fbclidFromUrl = urlParams.get("fbclid");
+
+  if (fbclidFromUrl) {
+    fbc = `fb.1.${Date.now()}.${fbclidFromUrl}`;
+  } else if (cookies._fbc) {
+    fbc = cookies._fbc;
+  }
+
+  return { fbp, fbc };
+}
 
 export default function InternalLeadForm() {
   const searchParams = useSearchParams();
@@ -13,20 +39,31 @@ export default function InternalLeadForm() {
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
-  const [fbp, setFbp] = useState<string>("");
-  const [fbc, setFbc] = useState<string>("");
+  // YANGI: fbp/fbc ni oldindan ushlab qo'yish uchun ref
+  const cachedFbpRef = useRef<string>("");
+  const cachedFbcRef = useRef<string>("");
 
+  // YANGI: Sahifa ochilgach Pixel cookie qo'yishini kutamiz va ushlaymiz
   useEffect(() => {
-    if (typeof document !== "undefined") {
-      const cookies = document.cookie.split("; ").reduce((acc, cookie) => {
-        const [key, value] = cookie.split("=");
-        if (key && value) acc[key] = value;
-        return acc;
-      }, {} as Record<string, string>);
+    if (typeof window === "undefined") return;
 
-      setFbp(cookies._fbp || "");
-      setFbc(cookies._fbc || "");
-    }
+    const tryCapture = () => {
+      const { fbp, fbc } = getFbCookies();
+      if (fbp && !cachedFbpRef.current) cachedFbpRef.current = fbp;
+      if (fbc && !cachedFbcRef.current) cachedFbcRef.current = fbc;
+    };
+
+    tryCapture();
+
+    const timer1 = setTimeout(tryCapture, 500);
+    const timer2 = setTimeout(tryCapture, 1500);
+    const timer3 = setTimeout(tryCapture, 3000);
+
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+      clearTimeout(timer3);
+    };
   }, []);
 
   const formatPhone = (value: string): string => {
@@ -70,6 +107,13 @@ export default function InternalLeadForm() {
     }
 
     try {
+      // YANGI MANTIQ: Submit paytida yana cookie o'qiymiz
+      const { fbp: fbpNow, fbc: fbcNow } = getFbCookies();
+
+      // Eng yaxshisini tanlaymiz: hozir bormi yoki oldin ushlangan
+      const finalFbp = fbpNow || cachedFbpRef.current || "";
+      const finalFbc = fbcNow || cachedFbcRef.current || "";
+
       const eventId = `lead_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
       if (typeof window !== "undefined") {
         window.localStorage.setItem("fb_lead_event_id", eventId);
@@ -84,8 +128,8 @@ export default function InternalLeadForm() {
           bog_lanish_vaqti: time.trim(),
           product: productFromUrl,
           source: "zayavka",
-          fbp,
-          fbc,
+          fbp: finalFbp,
+          fbc: finalFbc,
           userAgent: navigator.userAgent,
           pageUrl: window.location.href,
           event_id: eventId,
