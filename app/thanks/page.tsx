@@ -1,27 +1,21 @@
 "use client";
-
 import { useEffect, useState } from "react";
-
 export default function ThanksPage() {
   const [seconds, setSeconds] = useState(10);
-
   // Pixel Lead event yuborish (dedup uchun event_id bilan)
   useEffect(() => {
     if (typeof window === "undefined") return;
-
     // localStorage'dan event_id ni olamiz (forma yuborilganda saqlangan)
     const eventId = window.localStorage.getItem("fb_lead_event_id");
-
     // Pixel (fbq) yuklangani kutib, Lead event yuboramiz
     const fireLeadEvent = () => {
       const fbq = (window as any).fbq;
       if (typeof fbq !== "function") return false;
-
       if (eventId) {
         fbq(
           "track",
           "Lead",
-          { currency: "UZS", value: 0 },
+          { currency: "UZS", value: 800000 },
           { eventID: eventId }
         );
         console.log("Pixel Lead yuborildi:", eventId);
@@ -29,12 +23,10 @@ export default function ThanksPage() {
         // event_id yo'q bo'lsa (to'g'ridan-to'g'ri /thanks ga kirgan) — yubormaymiz
         console.warn("event_id yo'q, Lead yuborilmadi");
       }
-
       // Bir martagina yuborilsin
       window.localStorage.removeItem("fb_lead_event_id");
       return true;
     };
-
     // fbq darhol mavjud bo'lmasligi mumkin (Pixel asinxron yuklanadi)
     if (!fireLeadEvent()) {
       const intervalId = setInterval(() => {
@@ -44,7 +36,6 @@ export default function ThanksPage() {
       setTimeout(() => clearInterval(intervalId), 5000);
     }
   }, []);
-
   useEffect(() => {
     if (seconds <= 0) {
       window.location.href = "/";
@@ -53,7 +44,6 @@ export default function ThanksPage() {
     const timer = setTimeout(() => setSeconds((s) => s - 1), 1000);
     return () => clearTimeout(timer);
   }, [seconds]);
-
   return (
     <main style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px", backgroundColor: "#f9fafb" }}>
       <div style={{ maxWidth: "400px", width: "100%", backgroundColor: "white", borderRadius: "16px", boxShadow: "0 10px 25px rgba(0,0,0,0.1)", padding: "40px", textAlign: "center" }}>
