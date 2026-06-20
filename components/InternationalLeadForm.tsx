@@ -142,7 +142,7 @@ export default function InternationalLeadForm() {
   return (
     <>
       <section className="min-h-screen bg-white py-6 px-4">
-        <div className="max-w-lg mx-auto">
+        <div className="max-w-md mx-auto">
 
           <div className="text-center mb-5">
             <div className="inline-flex items-center gap-1.5 bg-damber-light text-damber-blue px-3 py-1.5 rounded-full text-xs font-medium mb-3">
@@ -159,7 +159,7 @@ export default function InternationalLeadForm() {
             <p className="text-xs text-damber-navy/60">3 yil kafolat — bepul yetkazib berish</p>
           </div>
 
-          <div className="mx-auto mb-4" style={{ maxWidth: "420px" }}>
+          <div className="mx-auto mb-4" style={{ maxWidth: "360px" }}>
             <div
               className="relative bg-black rounded-2xl overflow-hidden shadow-xl"
               style={{ aspectRatio: "9/16" }}
