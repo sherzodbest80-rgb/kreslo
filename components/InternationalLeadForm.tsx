@@ -159,7 +159,7 @@ export default function InternationalLeadForm() {
             <p className="text-xs text-damber-navy/60">3 yil kafolat — bepul yetkazib berish</p>
           </div>
 
-          <div className="mx-auto mb-4" style={{ maxWidth: "360px" }}>
+          <div className="mx-auto mb-4" style={{ maxWidth: "300px" }}>
             <div
               className="relative bg-black rounded-2xl overflow-hidden shadow-xl"
               style={{ aspectRatio: "9/16" }}
